@@ -1,4 +1,4 @@
-import type { PointLike } from '@antv/g';
+import type { PointLike, Text } from '@antv/g';
 import { GM } from '@antv/g-gesture';
 import { find, get } from 'lodash';
 import {
@@ -129,7 +129,8 @@ export class RowCell extends HeaderCell {
     ) {
       return;
     }
-    return get(this.meta, 'parent.belongsCell.treeIcon.cfg');
+    // TODO: 是否正常返回样式
+    return get(this.meta, 'parent.belongsCell.treeIcon.style');
   }
 
   // draw tree icon
@@ -400,8 +401,11 @@ export class RowCell extends HeaderCell {
 
   protected getIconPosition() {
     // 不同 textAlign 下，对应的文字绘制点 x 不同
-    const { x, y, textAlign } = this.textShape.cfg.attrs;
+    const { x, y, textAlign } = (this.textShape as Text).style;
     const iconMarginLeft = this.getStyle().icon.margin.left;
+
+    const textX = +x;
+    const textY = +y;
 
     if (textAlign === 'left') {
       /**
@@ -413,8 +417,8 @@ export class RowCell extends HeaderCell {
        *   +---------+  +----+
        */
       return {
-        x: x + this.actualTextWidth + iconMarginLeft,
-        y,
+        x: textX + this.actualTextWidth + iconMarginLeft,
+        y: textY,
       };
     }
     if (textAlign === 'right') {
@@ -427,8 +431,8 @@ export class RowCell extends HeaderCell {
        *   +---------+  +----+
        */
       return {
-        x: x + iconMarginLeft,
-        y,
+        x: textX + iconMarginLeft,
+        y: textY,
       };
     }
 
@@ -441,8 +445,8 @@ export class RowCell extends HeaderCell {
      *   +---------+  +----+
      */
     return {
-      x: x + this.actualTextWidth / 2 + iconMarginLeft,
-      y,
+      x: textX + this.actualTextWidth / 2 + iconMarginLeft,
+      y: textY,
     };
   }
 
