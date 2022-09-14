@@ -1,7 +1,7 @@
-import type { Event as CanvasEvent } from '@antv/g-canvas';
-import { find, get, head, isEmpty } from 'lodash';
+import type { FederatedPointerEvent as CanvasEvent } from '@antv/g';
+import { find, head, isEmpty } from 'lodash';
 import { InterceptType, S2Event } from '../../../common/constant';
-import type { CellAppendInfo, Data } from '../../../common/interface';
+import type { Data } from '../../../common/interface';
 import type { Node } from '../../../facet/layout/node';
 import { BaseEvent, type BaseEventImplement } from '../../base-event';
 

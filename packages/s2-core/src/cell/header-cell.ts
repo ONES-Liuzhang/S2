@@ -1,4 +1,7 @@
-import type { Event as CanvasEvent, IShape } from '@antv/g-canvas';
+import type {
+  FederatedPointerEvent as CanvasEvent,
+  DisplayObject,
+} from '@antv/g';
 import {
   find,
   first,
@@ -35,7 +38,7 @@ export abstract class HeaderCell extends BaseCell<Node> {
 
   protected treeIcon: GuiIcon | undefined;
 
-  protected treeLeafNodeAlignDot: IShape | undefined;
+  protected treeLeafNodeAlignDot: DisplayObject | undefined;
 
   protected actionIcons: GuiIcon[];
 
@@ -159,11 +162,11 @@ export abstract class HeaderCell extends BaseCell<Node> {
       height: icon.size,
       fill: text.fill,
     });
-    sortIcon.on('click', (event: CanvasEvent) => {
+    sortIcon.addEventListener('click', (event: CanvasEvent) => {
       this.spreadsheet.emit(S2Event.GLOBAL_ACTION_ICON_CLICK, event);
       this.spreadsheet.handleGroupSort(event, this.meta);
     });
-    this.add(sortIcon);
+    this.appendChild(sortIcon);
     this.actionIcons.push(sortIcon);
   }
 
@@ -188,8 +191,8 @@ export abstract class HeaderCell extends BaseCell<Node> {
     });
 
     // 默认隐藏，hover 可见
-    icon.set('visible', !defaultHide);
-    icon.on('mouseover', (event: CanvasEvent) => {
+    icon.setAttribute('visibility', defaultHide ? 'hidden' : 'visible');
+    icon.addEventListener('mouseover', (event: CanvasEvent) => {
       this.spreadsheet.emit(S2Event.GLOBAL_ACTION_ICON_HOVER, event);
       onHover?.({
         hovering: true,
@@ -198,7 +201,7 @@ export abstract class HeaderCell extends BaseCell<Node> {
         event,
       });
     });
-    icon.on('mouseleave', (event: CanvasEvent) => {
+    icon.addEventListener('mouseleave', (event: CanvasEvent) => {
       this.spreadsheet.emit(S2Event.GLOBAL_ACTION_ICON_HOVER_OFF, event);
       onHover?.({
         hovering: false,
@@ -207,7 +210,7 @@ export abstract class HeaderCell extends BaseCell<Node> {
         event,
       });
     });
-    icon.on('click', (event: CanvasEvent) => {
+    icon.addEventListener('click', (event: CanvasEvent) => {
       this.spreadsheet.emit(S2Event.GLOBAL_ACTION_ICON_CLICK, event);
       (onClick || action)?.({
         iconName,
@@ -217,7 +220,7 @@ export abstract class HeaderCell extends BaseCell<Node> {
     });
 
     this.actionIcons.push(icon);
-    this.add(icon);
+    this.appendChild(icon);
   }
 
   protected drawActionIcons() {
@@ -319,8 +322,8 @@ export abstract class HeaderCell extends BaseCell<Node> {
       const visibleActionIcons: GuiIcon[] = [];
       forEach(this.actionIcons, (icon) => {
         // 仅存储当前不可见的 icon
-        if (!icon.get('visible')) {
-          icon.set('visible', true);
+        if (icon.getAttribute('visibility') !== 'visible') {
+          icon.setAttribute('visibility', 'visible');
           visibleActionIcons.push(icon);
         }
       });

@@ -1,4 +1,4 @@
-import type { IShape, Point, ShapeAttrs } from '@antv/g-canvas';
+import type { DisplayObject, PointLike, RectStyleProps } from '@antv/g';
 import {
   cond,
   constant,
@@ -39,6 +39,7 @@ import {
 } from '../utils/interaction/resize';
 import { isIPhoneX } from '../utils/is-mobile';
 import { getEllipsisText, getEmptyPlaceholder } from '../utils/text';
+import { CustomRect } from '../engine';
 import { i18n } from './../common/i18n';
 import { shouldAddResizeArea } from './../utils/interaction/resize';
 import { HeaderCell } from './header-cell';
@@ -46,7 +47,7 @@ import { HeaderCell } from './header-cell';
 export class CornerCell extends HeaderCell {
   protected declare headerConfig: CornerHeaderConfig;
 
-  protected textShapes: IShape[] = [];
+  protected textShapes: DisplayObject[] = [];
 
   /* 角头 label 类型 */
   public cornerType: CornerNodeType;
@@ -100,7 +101,7 @@ export class CornerCell extends HeaderCell {
     if (ellipseIndex !== -1 && this.spreadsheet.isHierarchyTreeType()) {
       // 剪裁到 ... 最有点的后1个像素位置
       const lastIndex = ellipseIndex + (isIPhoneX() ? 1 : 0);
-      firstLine = cornerText.substr(0, lastIndex);
+      firstLine = cornerText.slice(0, lastIndex);
       secondLine = cornerText.slice(lastIndex);
       // 第二行重新计算...逻辑
       secondLine = getEllipsisText({
@@ -190,13 +191,13 @@ export class CornerCell extends HeaderCell {
   protected drawBackgroundShape() {
     const { backgroundColor, backgroundColorOpacity } = this.getStyle().cell;
 
-    const attrs: ShapeAttrs = {
+    const style: RectStyleProps = {
       ...this.getCellArea(),
       fill: backgroundColor,
       fillOpacity: backgroundColorOpacity,
     };
 
-    this.backgroundShape = renderRect(this, attrs);
+    this.backgroundShape = renderRect(this, style);
   }
 
   /**
@@ -284,24 +285,30 @@ export class CornerCell extends HeaderCell {
     const offsetX = position.x + x - scrollX;
     const offsetY = position.y + (this.isLastRowCornerCell() ? 0 : y);
 
-    resizeArea.addShape('rect', {
-      attrs: {
-        ...getResizeAreaAttrs({
-          theme: resizeStyle,
-          id: field,
-          type: ResizeDirectionType.Horizontal,
-          effect: this.getResizeAreaEffect(),
-          offsetX,
-          offsetY,
-          width,
-          height,
-          meta: this.meta,
-        }),
-        x: offsetX + width - resizeStyle.size / 2,
-        y: offsetY,
-        height: this.isLastRowCornerCell() ? headerHeight : height,
-      },
+    const attrs = getResizeAreaAttrs({
+      theme: resizeStyle,
+      id: field,
+      type: ResizeDirectionType.Horizontal,
+      effect: this.getResizeAreaEffect(),
+      offsetX,
+      offsetY,
+      width,
+      height,
+      meta: this.meta,
     });
+    resizeArea.appendChild(
+      new CustomRect(
+        {
+          style: {
+            ...attrs.style,
+            x: offsetX + width - resizeStyle.size / 2,
+            y: offsetY,
+            height: this.isLastRowCornerCell() ? headerHeight : height,
+          },
+        },
+        attrs.appendInfo,
+      ),
+    );
   }
 
   protected showTreeIcon() {
@@ -311,7 +318,7 @@ export class CornerCell extends HeaderCell {
     );
   }
 
-  protected getIconPosition(): Point {
+  protected getIconPosition(): PointLike {
     const textCfg = this.textShapes?.[0]?.cfg.attrs;
     const { textBaseline, textAlign } = this.getTextStyle();
     const { size, margin } = this.getStyle().icon;
@@ -356,7 +363,7 @@ export class CornerCell extends HeaderCell {
     return width - this.getTreeIconWidth() - this.getActionIconsWidth();
   }
 
-  protected getTextPosition(): Point {
+  protected getTextPosition(): PointLike {
     return {
       x: 0,
       y: 0,
