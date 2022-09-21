@@ -24,6 +24,7 @@ import type {
   CellMeta,
   TooltipContentType,
   Pagination,
+  GlobalActionIconClickEventHandler,
 } from '@antv/s2';
 
 // 是否开启自适应宽高，并指定容器
@@ -177,12 +178,12 @@ export interface BaseSheetComponentProps<
   }) => void;
 
   // ============== Global ====================
+  onActionIconClick?: GlobalActionIconClickEventHandler;
   onKeyBoardDown?: (event: KeyboardEvent) => void;
   onKeyBoardUp?: (event: KeyboardEvent) => void;
   onCopied?: (copyData: string) => void;
   onActionIconHover?: (event: GEvent) => void;
   onActionIconHoverOff?: (event: GEvent) => void;
-  onActionIconClick?: (event: GEvent) => void;
   onContextMenu?: (event: GEvent) => void;
   onClick?: (event: GEvent) => void;
   onHover?: (event: GEvent) => void;

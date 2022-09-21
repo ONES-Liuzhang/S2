@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { createPivotSheet } from 'tests/util/helpers';
-import type { RowCell } from '@antv/s2';
 import type { SpreadSheet } from '@/sheet-type';
 import type { TextAlign } from '@/common';
+import type { RowCell } from '@/cell';
 
 describe('Row Cell Tests', () => {
   describe('Link Shape Tests', () => {

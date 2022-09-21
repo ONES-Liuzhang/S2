@@ -1,6 +1,6 @@
-import type { Node } from '@antv/s2';
 import { CellTypes, type HeaderActionIcon } from '@/common';
 import { getActionIconConfig } from '@/utils/cell/header-cell';
+import type { Node } from '@/facet/layout/node';
 
 describe('Header Cell Utils Tests', () => {
   describe('getActionIconConfig Tests', () => {

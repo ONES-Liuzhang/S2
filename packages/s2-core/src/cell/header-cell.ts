@@ -29,6 +29,7 @@ import type { Node } from '../facet/layout/node';
 import { includeCell } from '../utils/cell/data-cell';
 import { getActionIconConfig } from '../utils/cell/header-cell';
 import { getSortTypeIcon } from '../utils/sort-action';
+import { IconType } from '../common';
 
 export abstract class HeaderCell extends BaseCell<Node> {
   protected headerConfig: BaseHeaderConfig;
@@ -160,7 +161,11 @@ export abstract class HeaderCell extends BaseCell<Node> {
       fill: text.fill,
     });
     sortIcon.on('click', (event: CanvasEvent) => {
-      this.spreadsheet.emit(S2Event.GLOBAL_ACTION_ICON_CLICK, event);
+      this.spreadsheet.emit(
+        S2Event.GLOBAL_ACTION_ICON_CLICK,
+        event,
+        IconType.SortIcon,
+      );
       this.spreadsheet.handleGroupSort(event, this.meta);
     });
     this.add(sortIcon);

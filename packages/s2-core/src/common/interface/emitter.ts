@@ -33,6 +33,16 @@ export type RowCellCollapseTreeRowsType = {
   node: Node;
 };
 
+export enum IconType {
+  SortIcon = 'S2SortIcon',
+  DrillDownIcon = 'S2DrillDownIcon',
+}
+
+export type GlobalActionIconClickEventHandler = (
+  event: CanvasEvent,
+  type?: IconType,
+) => void;
+
 type CanvasEventHandler = (event: CanvasEvent) => void;
 type KeyboardEventHandler = (event: KeyboardEvent) => void;
 type MouseEventHandler = (event: MouseEvent) => void;
@@ -47,7 +57,7 @@ type SortedHandler = (rangeData: Data[]) => any;
 
 export interface EmitterType {
   /** ================ Global ================  */
-  [S2Event.GLOBAL_ACTION_ICON_CLICK]: CanvasEventHandler;
+  [S2Event.GLOBAL_ACTION_ICON_CLICK]: GlobalActionIconClickEventHandler;
   [S2Event.GLOBAL_ACTION_ICON_HOVER]: CanvasEventHandler;
   [S2Event.GLOBAL_ACTION_ICON_HOVER_OFF]: CanvasEventHandler;
   [S2Event.GLOBAL_COPIED]: (data: string) => void;

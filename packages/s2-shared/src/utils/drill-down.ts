@@ -1,4 +1,4 @@
-import { S2Event } from '@antv/s2';
+import { IconType, S2Event } from '@antv/s2';
 import type {
   HeaderActionIconProps,
   PartDrillDownDataCache,
@@ -82,7 +82,11 @@ export const handleActionIconClick = (params: ActionIconParams) => {
     }
   });
   if (event) {
-    spreadsheet.emit(S2Event.GLOBAL_ACTION_ICON_CLICK, event);
+    spreadsheet.emit(
+      S2Event.GLOBAL_ACTION_ICON_CLICK,
+      event,
+      IconType.DrillDownIcon,
+    );
   }
   callback({
     sheetInstance: spreadsheet,
